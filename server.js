@@ -1,4 +1,4 @@
-// server.js (v4 - Final)
+// server.js (v4.1 - With Root Handler)
 
 const express = require('express');
 const cors = require('cors');
@@ -40,8 +40,8 @@ const generateAnalytics = (videos) => {
 
     videos.forEach(video => {
         const views = Math.floor(Math.random() * 10000) + 500;
-        const likes = Math.floor(views * (Math.random() * 0.1 + 0.05)); // 5-15% like ratio
-        const comments = Math.floor(likes * (Math.random() * 0.05 + 0.01)); // 1-6% comment ratio
+        const likes = Math.floor(views * (Math.random() * 0.1 + 0.05));
+        const comments = Math.floor(likes * (Math.random() * 0.05 + 0.01));
         
         totalViews += views;
         totalLikes += likes;
@@ -62,6 +62,12 @@ const generateAnalytics = (videos) => {
 };
 
 // --- API Endpoints ---
+
+// [新增] 根目录欢迎信息
+app.get('/', (req, res) => {
+    res.json({ message: '暗房 MCN 后端服务已成功启动。欢迎！' });
+});
+
 app.get('/api/status', (req, res) => res.json({ message: '暗房后端服务正在运行！准备接收任务。' }));
 
 app.post('/api/login', (req, res) => {
@@ -108,7 +114,6 @@ app.post('/api/publish', (req, res) => {
     }
 });
 
-// API端点6: 获取分析数据 (全新！)
 app.get('/api/analytics/:username', (req, res) => {
     const { username } = req.params;
     const user = FAKE_DATABASE[username];
